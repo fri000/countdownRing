@@ -95,24 +95,16 @@ void PhotoCountSelectMonitor::checkAnalogPin()
        )
     {
         //Yes the voltage changed.
-        //map the current analog value to the number of seconds of delay.
+        //Draw the bar display to show the user how many photos they have selected.
+
+        //map the current analog value to the number of photos to take.
         //                      value,    fromLow, fromHigh, toLow, toHigh
         m_selectedPhotoCount = map(newReading, 0, 1000, MIN_PHOTO_COUNT, MAX_PHOTO_COUNT);
-         //1000 instead of 1023 to make sure the last leds lights up
-        
-        //Draw the bar display to show the user how many seconds they have selected.
-        if(m_previousReading == INVALID_ANALOG_VALUE)
-        {
-            //This is our very first reading since we powered up.
-            //Don't active the display for this reading,
-            //Just prime our internal variables with an initial reading.
-        }
-        else
-        {
-            // Light up the leds!
-            m_barDisplay.activate();
-        }
-        
+        //1000 instead of 1023 to make sure the last leds lights up
+
+        // Grab focus so we can light up the leds!
+        m_barDisplay.activate();
+
         m_timeIdleMs = 0;
         m_barDisplay.setColor( m_colorSelector.getColor() );
         m_barDisplay.setLength(m_selectedPhotoCount);

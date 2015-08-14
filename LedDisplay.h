@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include "Adafruit_NeoPixel.h"
 
-
+// A display made up of a chain of leds
 class LedDisplay
 {
 public:

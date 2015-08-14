@@ -13,14 +13,8 @@
 
 long map(long x, long in_min, long in_max, long out_min, long out_max)
 {
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }//end map
-
-
-
-
-
-
 
 
 void delayMicroseconds(unsigned int us)
@@ -73,10 +67,6 @@ void delayMicroseconds(unsigned int us)
 }//end delayMicroseconds
 
 
-
-
-
-
 int analogRead(uint8_t pin)
 {
     uint8_t low, high;
@@ -101,13 +91,12 @@ int analogRead(uint8_t pin)
     // ADSC is cleared when the conversion finishes
     while (bit_is_set(ADCSRA, ADSC));
 
-    // we have to read ADCL first; doing so locks both ADCL
-    // and ADCH until ADCH is read.  reading ADCL second would
+    // We have to read ADCL first; doing so locks both ADCL
+    // and ADCH until ADCH is read. Reading ADCL second would
     // cause the results of each conversion to be discarded,
     // as ADCL and ADCH would be locked when it completed.
     low = ADCL;
     high = ADCH;
-
 
     // combine the two bytes
     return (high << 8) | low;

@@ -1,12 +1,10 @@
 #include "ColorSelectMonitor.h"
 
-// #define POLL_DELAY_MS 33
 #define POLL_DELAY_MS 20
 #define MAX_WHEEL_POS 255
 #define MIN_WHEEL_POS 0
 #define AUTO_HIDE_DELAY_MS 3000
-// #define READING_THRESHOLD 2
-#define READING_THRESHOLD 4 //this was a test
+#define READING_THRESHOLD 4 
 #define INVALID_ANALOG_VALUE -1
 
 // Public Functions
@@ -91,22 +89,14 @@ void ColorSelectMonitor::checkAnalogPin()
        )
     {
         //Yes the voltage changed.
+        //Draw the bar display to show the user what color they have selected.
+
         //map the current analog value to the number of seconds of delay.
         //                      value,    fromLow, fromHigh, toLow, toHigh
         colorWheelPosition = map(newReading, 0, 1023, MIN_WHEEL_POS, MAX_WHEEL_POS);
-        
-        //Draw the bar display to show the user how many seconds they have selected.
-        if(m_previousReading == INVALID_ANALOG_VALUE)
-        {
-            //This is our very first reading since we powered up.
-            //Don't active the display for this reading,
-            //Just prime our internal variables with an initial reading.
-        }
-        else
-        {
-            //Light up the leds!
-            m_colorWheelDisplay.activate();
-        }
+
+        // Grab focus so we can light up the leds!
+        m_colorWheelDisplay.activate();
         
         m_timeIdleMs = 0;
         m_colorWheelDisplay.setWheelPosition(colorWheelPosition);

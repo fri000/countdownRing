@@ -12,12 +12,13 @@
 
 typedef uint8_t taskToken_t;
 typedef void(*pTaskFunc)(void*);
-typedef uint8_t eventId_t;
+typedef uint8_t eventId_t;
 
 //#define MAX_NUM_DELAYED_TASKS 31
 //#define MAX_NUM_EVENT_TASKS 31
 #define MAX_NUM_DELAYED_TASKS 8
 #define MAX_NUM_EVENT_TASKS 2
+// We allocate less slots for tasks and events because the attiny85 has less ram.
 
 class TaskScheduler
 {
@@ -40,7 +41,7 @@ public:
         // Note: This function (unlike other library functions) may be called from an external thread - to signal an external event.
 
     void deleteEventTrigger(eventId_t eventId);
-        // Deletes an existing event trigger. If the even being deleted is trigger and awaiting to be handled it will not be
+        // Deletes an existing event trigger. If the event being deleted is triggered and awaiting to be handled it will not be
         // handled.
 
 
@@ -48,7 +49,6 @@ public:
 private:
 
     // Private functions
-
     taskToken_t findFreeSpotInDelayedTaskArray();
     taskToken_t findFreeSpotInEventTaskArray();
     void handleAllTriggeredEvents();
@@ -62,7 +62,7 @@ private:
         void* clientData;
         uint32_t scheduledTime;
     };
-
+
     struct eventTaskEntry_t
     {
         pTaskFunc pTask;

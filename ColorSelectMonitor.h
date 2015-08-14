@@ -11,6 +11,9 @@
 #include "ColorWheelDisplay.h"
 #include "RunningAverageFilter.h"
 
+// Constantly monitors an analog pin and interprets its value as a RGB color
+// Displays the current selected color on the LED display when the analog pin
+// changes to a new value.
 class ColorSelectMonitor
 {
 public:
@@ -34,7 +37,7 @@ private:
     int16_t              m_previousReading;
     uint32_t             m_timeIdleMs;
     bool                 m_showingColorWheel;
-    RunningAverageFilter m_lowPassFilter;
+    RunningAverageFilter m_lowPassFilter; //Filter to smooth out analog readings
 };//end ColorSelectMonitor
 
 

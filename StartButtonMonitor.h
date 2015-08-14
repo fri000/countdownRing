@@ -7,12 +7,18 @@
   #include "WProgram.h"
   #include <pins_arduino.h>
 #endif
+
 #include "TaskScheduler.h"
 #include "PhotoCountSelectMonitor.h"
 #include "ColorSelectMonitor.h"
 #include "LedFuse.h"
 
-
+// Continuously monitors the start button. When pressed:
+//   Disables photoCountMonitor and colorMonitor.
+//   Tells the ledFuse to start the countdown animation.
+//   At the end of the countdown, triggers the camera to take the picture.
+//   Repeats until the desired number of pictures are taken.
+//   Re-actives photoCountMonitor and colorMonitor.
 class StartButtonMonitor
 {
 public:
@@ -42,7 +48,6 @@ private:
     uint8_t                  m_photosToTake;
     uint8_t                  m_photosTaken;
     uint8_t                  m_pinToMonitor;
-    uint32_t                 m_timeIdleMs;
     uint8_t                  m_triggerPin;
 };//end StartButtonMonitor
 

@@ -100,17 +100,13 @@ void TaskScheduler::doEventLoop()
         // Check if it is time to handle the next delayed task.
         if( currentTime >= nextScheduledTask.scheduledTime)
         {
-            //delete the task from the array
-            // Do this before calling the task, because the task may wish to
-            // add itself back on the task list
+            //Delete the task from the array.
+            // Do this before calling the task, because the task   
+            // may wish to add itself back on the task list.
             arrayOfDelayedTasks[idOfNextScheduledTask].pTask = 0;
             arrayOfDelayedTasks[idOfNextScheduledTask].clientData = 0;
             arrayOfDelayedTasks[idOfNextScheduledTask].scheduledTime = 0;
-
-            //Serial.println("Inside doEventLoop, about to call the next task"); delay(100); //debug
-            //Serial.print("nextScheduledTask.pTask = "); //debug
-            //Serial.println( (uint16_t)(nextScheduledTask.pTask)); delay(50); //debug
-
+			
             //call the task
             (nextScheduledTask.pTask)(nextScheduledTask.clientData);
 
@@ -206,7 +202,7 @@ void TaskScheduler::deleteEventTrigger(eventId_t eventId)
 
 
 
-// Private Function
+// Private Functions
 // ============================================================================
 
 taskToken_t TaskScheduler::findFreeSpotInDelayedTaskArray()

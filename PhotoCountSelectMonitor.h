@@ -12,6 +12,8 @@
 #include "ColorSelectMonitor.h"
 #include "RunningAverageFilter.h"
 
+// Constantly monitors an analog pin and interprets its value as the numbers of photos to take.
+// Displays the current selected count when the analog pin changes to a new value.
 class PhotoCountSelectMonitor
 {
 public:
@@ -38,10 +40,10 @@ private:
     uint32_t        m_timeIdleMs;
     bool            m_showingBarDisplay;
     uint8_t         m_selectedPhotoCount;
-    ColorSelectMonitor& m_colorSelector; //we ask it what is the current selected color
-    RunningAverageFilter m_lowPassFilter;
+    ColorSelectMonitor& m_colorSelector; //We ask it what is the current selected color
+    RunningAverageFilter m_lowPassFilter; //Filter to smooth out analog readings
 };//end PhotoCountSelectMonitor
 
 
 
-#endif //PhotoCountSelectMonitor_HEADERGUARD
+#endif //PHOTOCOUNTSELECTMONITOR_HEADERGUARD

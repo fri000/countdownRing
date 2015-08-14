@@ -19,7 +19,6 @@ StartButtonMonitor::StartButtonMonitor(TaskScheduler& scheduler, LedFuse& fuse, 
     m_photosToTake(1), //take 1 photo by default
     m_photosTaken(0),
     m_pinToMonitor(monitorPin),
-    m_timeIdleMs(0),
     m_triggerPin(triggerPin)
 {
     //start enabled by default.
@@ -100,7 +99,7 @@ void StartButtonMonitor::checkDigitalPin()
         
         m_ledColor     = m_colorSelector.getColor();
         m_photosToTake = m_photoCountSelector.getCount();
-        m_photosTaken  = 0;
+        m_photosTaken  = 0; //reset how many shots we've taken
         
         // mySerial.print("m_photosToTake = ");
         // mySerial.print(m_photosToTake);
@@ -109,7 +108,7 @@ void StartButtonMonitor::checkDigitalPin()
         
         m_ledFuse.ignite(m_burnTimeMs, m_ledColor);
         
-        //schedule ourselves to be reactivated after the burnTime + coolDownDelay
+        //Schedule the camera to be triggered a little bit after the countdown animation ends.
         m_currentScheduledTask = m_scheduler.scheduleDelayedTask(triggerCamera0, this, m_burnTimeMs + 10);
     }
     else
@@ -118,14 +117,15 @@ void StartButtonMonitor::checkDigitalPin()
         //Set up a delayed task so that we will check again in a little bit.
         m_currentScheduledTask = m_scheduler.scheduleDelayedTask(checkDigitalPin0, this, POLL_DELAY_MS);
     }
-   
 }//end checkDigitalPin
 
 
 void StartButtonMonitor::triggerCamera()
 {
     digitalWrite(m_triggerPin, HIGH); 
-    const uint16_t TRIGGER_HIGH_TIME_MS = 2000;
+    const uint16_t TRIGGER_HIGH_TIME_MS = 2000; //Length of trigger pulse
+    // We assume 2 seconds is long enough for all cameras to auto-focus and take the picture.
+    // If the pin goes low before auto-focus is finished, some cameras will abort taking the picture.
     m_currentScheduledTask = m_scheduler.scheduleDelayedTask(reactivate0, this, TRIGGER_HIGH_TIME_MS);
 }//end triggerCamera
 
@@ -135,10 +135,11 @@ void StartButtonMonitor::reactivate()
     digitalWrite(m_triggerPin, LOW); 
     m_photosTaken++;
     
+    // Do we have more photos to take?
     if(m_photosTaken < m_photosToTake)
     {
-        //take one more photo
-        //Start the led count down again
+        //Take one more photo.
+        //Start the led count down again.
         m_ledFuse.ignite(m_burnTimeMs, m_ledColor);
         //schedule ourselves to be reactivated after the burnTime + coolDownDelay
         m_currentScheduledTask = m_scheduler.scheduleDelayedTask(triggerCamera0, this, m_burnTimeMs + 10);
@@ -146,7 +147,7 @@ void StartButtonMonitor::reactivate()
     else
     {
         //We are done taking all the pictures, reactive monitoring of the start button
-        m_currentScheduledTask = 0; //this is needed for our enable function to work.
+        m_currentScheduledTask = 0; //Needed for our enable function to work.
         enable(); 
         m_photoCountSelector.enable();
         m_colorSelector.enable();

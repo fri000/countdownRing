@@ -4,12 +4,13 @@
 #include "TaskScheduler.h"
 #include "LedDisplay.h"
 
+// Animates a burning fuse (count down) on the led display.
 class LedFuse
 {
 public:
     LedFuse(TaskScheduler& scheduler, LedDisplay& display);
     ~LedFuse();
-    bool ignite(uint16_t burnTime, uint32_t color);
+    bool ignite(uint16_t burnTime, uint32_t color); // Start the animation!
     
     static void decrementFuse0(void* clientData); //should only be called by the taskScheduler.
 
